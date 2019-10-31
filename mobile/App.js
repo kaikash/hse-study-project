@@ -63,6 +63,12 @@ export default class App extends React.Component {
         { gestures.length > 0 && <Button title="Share" onPress={() => {
           Sharing.shareAsync(resultFilename)
         }} /> }
+        { gestures.length > 0 && <Button title="Reset" color="red" onPress={() => {
+          buffer = [];
+          gestures = [];
+          session = Date.now();
+          resultFilename = `${FileSystem.cacheDirectory}gestures_${session}.json`;
+        }} /> }
         <Text>{JSON.stringify(this.state.data, undefined, 2)}</Text>
       </View>
     );
