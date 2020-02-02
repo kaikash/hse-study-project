@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
-import { Accelerometer } from 'expo-sensors';
+import { Accelerometer, DeviceMotion } from 'expo-sensors';
 import { ScreenOrientation } from 'expo';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
@@ -28,13 +28,23 @@ export default class App extends React.Component {
 
   async componentDidMount () {
     await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
-    await Accelerometer.isAvailableAsync();
-    Accelerometer.setUpdateInterval(5);
-    Accelerometer.addListener((data) => {
-      this.setState({ data });
+    await DeviceMotion.isAvailableAsync();
+    DeviceMotion.setUpdateInterval(1);
+    DeviceMotion.addListener((data) => {
       if (this.state.record)
-        buffer.push({ ...data, time: Date.now()-start });
-
+        buffer.push([
+          Date.now()-start,
+          data.acceleration.x,
+          data.acceleration.y,
+          data.acceleration.z,
+          data.rotation.alpha,
+          data.rotation.beta,
+          data.rotation.gamma,
+          data.rotationRate.alpha,
+          data.rotationRate.beta,
+          data.rotationRate.gamma,
+          data.orientation
+        ]);
     });
 
   }
@@ -64,12 +74,17 @@ export default class App extends React.Component {
           Sharing.shareAsync(resultFilename)
         }} /> }
         { gestures.length > 0 && <Button title="Reset" color="red" onPress={() => {
-          buffer = [];
-          gestures = [];
-          session = Date.now();
-          resultFilename = `${FileSystem.cacheDirectory}gestures_${session}.json`;
+          try {
+            buffer = [];
+            gestures = [];
+            session = Date.now();
+            resultFilename = `${FileSystem.cacheDirectory}gestures_${session}.json`;
+            this.setState({ record: false })
+          } catch (err) {
+            console.warn(err)
+          }
         }} /> }
-        <Text>{JSON.stringify(this.state.data, undefined, 2)}</Text>
+        {/* <Text>{JSON.stringify(this.state.data, undefined, 2)}</Text> */}
       </View>
     );
   }
