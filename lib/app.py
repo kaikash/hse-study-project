@@ -9,7 +9,7 @@ g = Gesture.from_file("круг.json")
 
 import matplotlib.pyplot as plt
 
-g = Gesture.from_file("круг.json")
+g = Gesture.from_file("круг.json")[0]
 data = g.select_proj_2d()
 plt.scatter(data[:,0], data[:,1])
 plt.show()

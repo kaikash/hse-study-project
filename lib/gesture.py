@@ -60,4 +60,4 @@ class Gesture:
         script_dir = os.path.dirname(__file__)
         with open(script_dir + '/../data/' + filename) as json_file:
             data = json.load(json_file)
-        return self(data[0])
+        return [*map(lambda x: self(x), data)]

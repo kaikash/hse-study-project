@@ -1,0 +1,6 @@
+verison: '3'
+services:
+  jupyter:
+    build: ./
+    ports:
+      - 8338:8080
