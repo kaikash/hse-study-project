@@ -1,5 +1,6 @@
 from measurement import Measurement
 import numpy as np
+import matplotlib.pyplot as plt
 import json
 import glob
 import os
@@ -30,16 +31,33 @@ class Gesture:
         res = minimize(objective, x0, method='SLSQP', constraints=condition, bounds=bnds)
         return res.x
 
-    def select_proj_on_plane(self, normal_vector=None):
+    def select_proj_3d(self, normal_vector=None):
         if normal_vector is None:
             normal_vector = self.select_plane()
         normal_vector = np.array(normal_vector)
         return list(map(lambda v:
             v - np.dot(v, normal_vector) * normal_vector,
             self.accel_data))
-    
+
+    def select_proj_2d(self, normal_vector=None):
+        if normal_vector is None:
+            normal_vector = self.select_plane()
+        n = np.array(normal_vector)
+
+        a = np.array([1, 1, (-n[0] - n[1])/n[2]])
+        a /= np.dot(a, a)
+        b = np.array([1, -1, (n[1]-n[0])/n[2]])
+        b -= np.dot(b, a) * a
+        b /= np.dot(b, b)
+
+        C = np.array([a, b, n]).T # 3x3
+        A = np.array(self.select_proj_3d(normal_vector)).T # 3xn
+        res = np.dot(np.linalg.inv(C), A).T[:, 0:2]
+        return res
+
     @classmethod
     def from_file(self, filename):
-        with open('../data/' + filename) as json_file:
+        script_dir = os.path.dirname(__file__)
+        with open(script_dir + '/../data/' + filename) as json_file:
             data = json.load(json_file)
         return self(data[0])
