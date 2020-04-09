@@ -48,6 +48,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN conda install -c anaconda jupyter
+RUN conda install -c conda-forge tensorflow
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
