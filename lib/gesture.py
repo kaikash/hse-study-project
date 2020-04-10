@@ -6,6 +6,7 @@ import glob
 import os
 from scipy.optimize import minimize
 from new_predict import make_prediction
+import plotly.graph_objects as go
 
 class Gesture:
     def __init__(self, data):
@@ -55,7 +56,7 @@ class Gesture:
         A = np.array(self.select_proj_3d(normal_vector)) # 3xn
         res = np.dot(A, np.linalg.inv(C))[:, 0:2]
         return res
-    
+
     def to_image(self, directory=os.path.dirname(__file__), filename='img.jpg'):
         data = self.select_proj_2d()
         fig = plt.figure(frameon=False, figsize=[10, 10])
@@ -70,6 +71,37 @@ class Gesture:
     def predict(self):
         f = self.to_image()
         return make_prediction(f)
+
+    def draw_accel_3d(self, with_surf=False):
+        size_of_cube = 15
+
+        figs = [go.Scatter3d(
+            x=self.accel_data[:, 0],
+            y=self.accel_data[:, 1],
+            z=self.accel_data[:, 2],
+            opacity=0.5,
+            name='data in 3D'
+        )]
+
+        if with_surf:
+            proj_data = np.array(self.select_proj_3d())
+            figs.append(go.Scatter3d(
+                x=proj_data[:, 0],
+                y=proj_data[:, 1],
+                z=proj_data[:, 2],
+                opacity=0.5,
+                name='data in 3D'
+            ))
+
+        fig = go.Figure(data=figs)
+        fig.update_layout(
+            scene = dict(xaxis = dict(nticks=4, range=[-size_of_cube,size_of_cube],),
+                        yaxis = dict(nticks=4, range=[-size_of_cube,size_of_cube],),
+                        zaxis = dict(nticks=4, range=[-size_of_cube,size_of_cube],),),
+            width=700,
+            margin=dict(r=20, l=10, b=10, t=10))
+
+        fig.show()
 
     @classmethod
     def from_abs_file(self, filename):

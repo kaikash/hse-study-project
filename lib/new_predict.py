@@ -1,14 +1,13 @@
-import tensorflow.keras
-from PIL import Image, ImageOps
-import numpy as np
-
-# Disable scientific notation for clarity
-np.set_printoptions(suppress=True)
-
-# Load the model
-model = tensorflow.keras.models.load_model('keras_model.h5')
-
 def make_prediction(filename):
+    import tensorflow.keras
+    from PIL import Image, ImageOps
+    import numpy as np
+
+    # Disable scientific notation for clarity
+    np.set_printoptions(suppress=True)
+
+    # Load the model
+    model = tensorflow.keras.models.load_model('keras_model.h5')
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
     # Replace this with the path to your image
