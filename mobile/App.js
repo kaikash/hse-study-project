@@ -4,6 +4,8 @@ import { Accelerometer, DeviceMotion } from 'expo-sensors';
 import { ScreenOrientation } from 'expo';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import axios from 'axios'
+import { apiUrl } from './config'
 
 
 // export default function App() {
@@ -59,9 +61,13 @@ export default class App extends React.Component {
           }}
           onTouchEnd={async () => {
             this.setState({ record: false })
+            let bufferCopy = buffer.concat()
             gestures.push(buffer.concat())
             buffer = []
             await FileSystem.writeAsStringAsync(resultFilename, JSON.stringify(gestures))
+            let res = await axios.post(`${apiUrl}/predict`, [bufferCopy])
+            console.warn(res.data)
+            alert(Object.entries(res.data.result).map(x => x.join(': ')).join(', \n'))
           }}
           style={{
             width: this.state.record ? 300 : 250,
