@@ -9,10 +9,11 @@ from gesture import Gesture
 
 import matplotlib.pyplot as plt
 
-g = Gesture.from_file("квадрат.json")[0]
+g = Gesture.from_file("cirl_test.json")[0]
 # g.draw_accel_3d()
-g.draw_accel_3d(with_surf=True)
+# g.draw_accel_3d(with_surf=True)
 # g.to_image()
+g.predict()
 # data = g.select_proj_2d()
 # plt.scatter(data[:,0], data[:,1])
 # plt.show()

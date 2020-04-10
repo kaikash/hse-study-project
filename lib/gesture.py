@@ -20,14 +20,14 @@ class Gesture:
         def objective(x):
             sum = 0
             for v in self.accel_data:
-                sum += np.dot(v, x)
+                sum -= np.dot(v, x)
             return sum
 
         def func_bound(x):
             return sum(x ** 2) - 1
 
         condition = {'type': 'eq', 'fun': func_bound}
-        x0 = np.array([1, 1, 1])
+        x0 = np.array([1.0, 1.0, 1.0])
         b = (0.0, 1.0)
         bnds = (b, b, b)
         res = minimize(objective, x0, method='SLSQP', constraints=condition, bounds=bnds)
@@ -46,15 +46,23 @@ class Gesture:
             normal_vector = self.select_plane()
         n = np.array(normal_vector)
 
-        a = np.array([1, 1, (-n[0] - n[1])/n[2]])
-        a /= np.dot(a, a)
-        b = np.array([1, -1, (n[1]-n[0])/n[2]])
-        b -= np.dot(b, a) * a
-        b /= np.dot(b, b)
+        a = np.array([n[1], -n[0], 0])
+        b = np.array([n[2], 0, -n[0]])
+        c = np.array([0, n[2], -n[1]])
+        if sum(a ** 2) == 0:
+            a = c
+        if sum(b ** 2) == 0:
+            b = c
+        b -= np.dot(b, a) / np.dot(a, a) * a
+        a /= np.dot(a, a) ** 0.5
+        b /= np.dot(b, b) ** 0.5
 
         C = np.array([a, b, n]) # 3x3
         A = np.array(self.select_proj_3d(normal_vector)) # 3xn
         res = np.dot(A, np.linalg.inv(C))[:, 0:2]
+        # plt.scatter(x=res[:, 0], y=res[:,1])
+        # plt.plot(res[:,0], res[:,1], linewidth=5)
+        # plt.show()
         return res
 
     def to_image(self, directory=os.path.dirname(__file__), filename='img.jpg'):
@@ -80,17 +88,26 @@ class Gesture:
             y=self.accel_data[:, 1],
             z=self.accel_data[:, 2],
             opacity=0.5,
-            name='data in 3D'
+            name='accel data'
         )]
 
         if with_surf:
-            proj_data = np.array(self.select_proj_3d())
+            n = self.select_plane()
+            proj_data = np.array(self.select_proj_3d(n))
+            # figs = []
             figs.append(go.Scatter3d(
                 x=proj_data[:, 0],
                 y=proj_data[:, 1],
                 z=proj_data[:, 2],
                 opacity=0.5,
-                name='data in 3D'
+                name='accel proj'
+            ))
+            figs.append(go.Scatter3d(
+                x=[n[0]],
+                y=[n[1]],
+                z=[n[2]],
+                opacity=1,
+                name='normal vector'
             ))
 
         fig = go.Figure(data=figs)
