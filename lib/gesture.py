@@ -5,6 +5,7 @@ import json
 import glob
 import os
 from scipy.optimize import minimize
+from new_predict import make_prediction
 
 class Gesture:
     def __init__(self, data):
@@ -54,10 +55,29 @@ class Gesture:
         A = np.array(self.select_proj_3d(normal_vector)).T # 3xn
         res = np.dot(np.linalg.inv(C), A).T[:, 0:2]
         return res
+    
+    def to_image(self, directory=os.path.dirname(__file__), filename='img.jpg'):
+        data = self.select_proj_2d()
+        fig = plt.figure(frameon=False, figsize=[10, 10])
+        ax = fig.add_axes([0, 0, 1, 1])
+        ax.axis('off')
+        plt.plot(data[:,0], data[:,1], linewidth=5)
+        plt.axis('equal')
+        file_abs_path = directory + '/' + filename
+        plt.savefig(file_abs_path)
+        return file_abs_path
+
+    def predict(self):
+        f = self.to_image()
+        return make_prediction(f)
+
+    @classmethod
+    def from_abs_file(self, filename):
+        with open(filename) as json_file:
+            data = json.load(json_file)
+        return [*map(lambda x: self(x), data)]
 
     @classmethod
     def from_file(self, filename):
         script_dir = os.path.dirname(__file__)
-        with open(script_dir + '/../data/' + filename) as json_file:
-            data = json.load(json_file)
-        return [*map(lambda x: self(x), data)]
+        return self.from_abs_file(script_dir + '/../data/' + filename)

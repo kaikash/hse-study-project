@@ -50,6 +50,11 @@ RUN apt-get update \
 RUN conda install -c anaconda jupyter
 RUN conda install -c conda-forge tensorflow
 
+RUN curl -sL https://deb.nodesource.com/setup_13.x | bash - \
+    &&  apt-get install -y nodejs
+
+RUN pip install pypi-xmlrpc
+
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
 
