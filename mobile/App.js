@@ -66,7 +66,6 @@ export default class App extends React.Component {
             buffer = []
             await FileSystem.writeAsStringAsync(resultFilename, JSON.stringify(gestures))
             let res = await axios.post(`${apiUrl}/predict`, [bufferCopy])
-            console.warn(res.data)
             alert(Object.entries(res.data.result).map(x => x.join(': ')).join(', \n'))
           }}
           style={{
