@@ -51,9 +51,9 @@ class Gesture:
         b -= np.dot(b, a) * a
         b /= np.dot(b, b)
 
-        C = np.array([a, b, n]).T # 3x3
-        A = np.array(self.select_proj_3d(normal_vector)).T # 3xn
-        res = np.dot(np.linalg.inv(C), A).T[:, 0:2]
+        C = np.array([a, b, n]) # 3x3
+        A = np.array(self.select_proj_3d(normal_vector)) # 3xn
+        res = np.dot(A, np.linalg.inv(C))[:, 0:2]
         return res
     
     def to_image(self, directory=os.path.dirname(__file__), filename='img.jpg'):
