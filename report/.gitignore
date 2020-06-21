@@ -7,3 +7,4 @@
 **/*.toc
 **/*.xdv
 **/*.pdf
+.DS_Store
