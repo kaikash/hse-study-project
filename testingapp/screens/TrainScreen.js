@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import * as WebBrowser from "expo-web-browser";
 import * as React from "react";
-import { StyleSheet, Text, View, Picker, Button } from "react-native";
+import { Image, StyleSheet, Text, View, Picker, Button } from "react-native";
 import { RectButton, ScrollView } from "react-native-gesture-handler";
 import Motion from "../components/Motion";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
+
+import exampleImage from '../assets/images/12.jpg'
 
 export default function TrainScreen() {
   const [classes, setClasses] = useState([
@@ -16,9 +18,11 @@ export default function TrainScreen() {
   ]);
   const [selectedClass, setSelectedClass] = useState("circle");
   const [gesture, setGesture] = useState([]);
+  const [result, setResult] = useState(false);
 
   const submitGesture = () => {
-    alert(selectedClass + "\n" + JSON.stringify(gesture));
+    // alert(selectedClass + "\n" + JSON.stringify(gesture));
+    setResult(true)
   };
   return (
     <View style={{ alignItems: "center", flex: 1 }}>
@@ -47,7 +51,13 @@ export default function TrainScreen() {
         </Picker>
       </View>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Motion onGesture={(gesture) => setGesture(gesture)} />
+        { !result && <Motion onGesture={(gesture) => setGesture(gesture)} /> }
+        { result && <View style={{ alignItems: "center" }}>
+          <Image
+            style={{ width: 200, height: 200, marginBottom: 20 }}
+            source={exampleImage}
+          />
+        </View> }
       </View>
       <View
         style={{
@@ -57,11 +67,12 @@ export default function TrainScreen() {
         }}
       >
         <View style={{ flex: 1 }}>
-          <Button title="Reset" color="red" onPress={() => setGesture(null)} />
+          <Button title="Reset" color="red" onPress={() => {
+            setGesture(null)
+            setResult(null)
+          }} />
         </View>
-        <View style={{ flex: 1 }}>
-          <Button title="Submit" onPress={() => submitGesture()} />
-        </View>
+        <Button title="Submit" disabled={!!result} onPress={() => submitGesture()} />
         <View style={{ flex: 1 }}>
           <Button
             title="Share"
