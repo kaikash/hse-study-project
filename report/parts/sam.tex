@@ -11,32 +11,32 @@
 
 На вход я получаю массив с 7-ю параметрами: время от начала движения, ускорение по оси X, ускорение по оси Y, ускорение по оси Z, угол поворта по X (Pitch), угол поворота по Y (Roll) и угол поворота по Z (Yaw).
 
-\begin{figure}[H]
-    \center{\includegraphics[scale = 0.7]{1.png}}
-\end{figure}
+% \begin{figure}[H]
+%     \center{\includegraphics[scale = 0.7]{1.png}}
+% \end{figure}
 
 \subsubsection{НОРМАЛИЗАЦИЯ ДАННЫХ}
 Для своей задачи я использую 2 фильтра – тот что реализован другим членом моей команды и свой. Мой фильтр сглаживает определенную погрешность. 
 
-\begin{figure}[H]
-    \center{\includegraphics[scale = 0.7]{2.png}}
-\end{figure}
+% \begin{figure}[H]
+%     \center{\includegraphics[scale = 0.7]{2.png}}
+% \end{figure}
 
 А так же из каждого значения акселерометра по каждой оси вычитается среднее по это оси.
 
-\begin{figure}[H]
-    \center{\includegraphics[scale = 0.85]{graph_1.png}}
-    \center{\includegraphics[scale = 0.85]{graph_2.png}}
-\end{figure}
+% \begin{figure}[H]
+%     \center{\includegraphics[scale = 0.85]{graph_1.png}}
+%     \center{\includegraphics[scale = 0.85]{graph_2.png}}
+% \end{figure}
 
 \subsubsection{НАХОЖДЕНИЕ ПОЛОЖЕНИЯ ТЕЛЕФОНА БЕЗ УЧЕТА ДАННЫХ ИЗ ГИРОСКОПА}
 
 После того как данные нормализованы – как уже говорилось ранее – данные акселерометра дважды интегрируются. Если данные акселерометра по X – это вектор А, а время – это вектор T, то положение в каждый момент времени определяется, как $A[i] * (T[i] - T[i-1])$.
 
-\begin{figure}[H]
-    \center{\includegraphics[scale = 0.85]{3d_graph_1.png}}
-    \center{\includegraphics[scale = 0.85]{3d_graph_2.png}}
-\end{figure}
+% \begin{figure}[H]
+%     \center{\includegraphics[scale = 0.85]{3d_graph_1.png}}
+%     \center{\includegraphics[scale = 0.85]{3d_graph_2.png}}
+% \end{figure}
 
 \subsubsection{ПОЧЕМУ И КАК ЭТО РАБОТАЕТ?}
 
