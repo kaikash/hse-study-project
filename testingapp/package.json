@@ -41,5 +41,10 @@
     "babel-preset-expo": "~8.1.0",
     "jest-expo": "~37.0.0"
   },
-  "private": true
+  "private": true,
+  "name": "testingapp",
+  "version": "1.0.0",
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
