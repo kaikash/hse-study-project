@@ -1,1 +1,90 @@
-\section{Часть Фархата}
+\section{Создание механизма 
+сглаживания и фильтрации данных акселерометра и 
+гироскопа (Агаев Фархат)}
+
+Моей главной задачей являлось написть фильтр, 
+который сможет сгладить данные и избавиться от шума.
+Чтобы применить правильный фильтр нужно понять природу шума, 
+почему датчик акселерометра искажает данные.
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{cc}
+            \includegraphics[width=1\textwidth]{farim/relax} & 
+        \end{tabular}
+    \end{center}
+\end{figure}
+
+\subsection{Природа шума}
+Для начала нарисуем график по трем осям, 
+когда телефон лежит на столе, посмотрим есть какие-либо перепады
+
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{cc}
+            \includegraphics[width=1\textwidth]{farim/im2} & 
+        \end{tabular}
+    \end{center}
+\end{figure}
+Можно препдположить что, 
+ток течет по проводам и при этом, он создаёт вокруг себя магнитное поле 
+(чтобы избежать данный эффект, нужна хорошая изоляция),
+которое в свою очередь и портит наши данные.
+Но в телефоне датчик акселерометра - маленькая ми
+Нужна хорошая изоляция (невозожно сделать)
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{cc}
+            \includegraphics[width=0.75\textwidth]{farim/squares} & 
+        \end{tabular}
+    \end{center}
+\end{figure}
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{cc}
+            \includegraphics[width=0.75\textwidth]{farim/sqxres} & 
+        \end{tabular}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{cc}
+            \includegraphics[width=1\textwidth]{farim/sqzres} & 
+        \end{tabular}
+    \end{center}
+\end{figure}
+
+\newpage
+
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{cc}
+            \includegraphics[width=1\textwidth]{farim/cirxres.png} & 
+        \end{tabular}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{cc}
+            \includegraphics[width=1\textwidth]{farim/ciryres.png} & 
+        \end{tabular}
+    \end{center}
+\end{figure}
+
+
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{cc}
+            \includegraphics[width=1\textwidth]{farim/cirzres.png} & 
+        \end{tabular}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{cc}
+            \includegraphics[width=1\textwidth]{farim/shak.png} & 
+        \end{tabular}
+    \end{center}
+\end{figure}
