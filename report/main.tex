@@ -1,0 +1,89 @@
+\documentclass{article}
+\usepackage[T2A, T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{titling}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{python}
+% \usepackage{minted}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsthm}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{ellipsis}
+\usepackage{tikz-cd}
+\usepackage{float}
+\renewcommand{\ellipsisgap}{0.03em}
+\newcommand{\diff}{\mathrm{d}}
+
+\usepackage{graphicx}
+\graphicspath{ {./} }
+
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+\usepackage{titlesec}
+\usepackage[rightcaption]{sidecap}
+\usepackage{wrapfig}
+\titleformat*{\subsubsection}{\normalfont}
+
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+\setlength{\droptitle}{-3.5cm}
+\setlength{\parindent}{0cm}
+\newcommand{\squad}{\hspace{0.5em}}
+\renewcommand{\arraystretch}{1.5}
+
+\newtheorem{definition}{Определение}
+\newtheorem{theorem}{Теорема}
+\newtheorem{lemma}{Лемма}
+\newtheorem{statement}{Утверждение}
+\newtheorem{remark}{Замечание}
+% \renewcommand{\sectionbreak}{}
+
+\author{hse-ami-open-exams}
+\title{Летний коллоквиум по математическому анализу}
+\date{}
+\usepackage
+[
+        a4paper,
+        left=2cm,
+        right=2cm,
+        top=3cm,
+        bottom=4cm
+]
+{geometry}
+
+
+
+\begin{document}
+
+% \maketitle
+\tableofcontents{}
+\newpage
+
+\input{parts/introduction}
+\input{parts/glossaries}
+% \input{parts/farhat}
+\input{parts/vlad}
+\input{parts/max}
+\input{parts/sav}
+\input{parts/sam}
+\input{parts/gleb}
+
+\end{document}
+
