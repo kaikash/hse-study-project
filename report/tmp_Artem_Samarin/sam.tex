@@ -1,36 +1,3 @@
-\documentclass[a4paper]{article}
-
-\usepackage{cmap}
-\usepackage[T2A]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage[english,russian]{babel}
-\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools}
-
-\usepackage{amsmath}
-\usepackage{float}
-\usepackage{amsmath}
-\usepackage{tikz}
-\usepackage{mathdots}
-\usepackage{yhmath}
-\usepackage{cancel}
-\usepackage{color}
-\usepackage{siunitx}
-\usepackage{array}
-\usepackage{multirow}
-\usepackage{amssymb}
-\usepackage{gensymb}
-\usepackage{tabularx}
-\usepackage{booktabs}
-\usepackage{amsmath, amsfonts}
-\usepackage{mathtext}
-\usepackage{dsfont}
-\usepackage{xcolor}
-\usepackage{hyperref}
-\usepackage{graphicx}
-\graphicspath{{sam_images/}}
-
-\begin{document}
-
 \section*{Часть Самарина Артема}
 
 \subsection*{Теоретическая часть}
@@ -44,32 +11,32 @@
 
 На вход я получаю массив с 7-ю параметрами: время от начала движения, ускорение по оси X, ускорение по оси Y, ускорение по оси Z, угол поворта по X (Pitch), угол поворота по Y (Roll) и угол поворота по Z (Yaw).
 
-\begin{figure}[H]
-    \center{\includegraphics[scale = 0.7]{1.png}}
-\end{figure}
+% \begin{figure}[H]
+%     \center{\includegraphics[scale = 0.7]{1.png}}
+% \end{figure}
 
 \subsubsection*{НОРМАЛИЗАЦИЯ ДАННЫХ}
 Для своей задачи я использую 2 фильтра – тот что реализован другим членом моей команды и свой. Мой фильтр сглаживает определенную погрешность. 
 
-\begin{figure}[H]
-    \center{\includegraphics[scale = 0.7]{2.png}}
-\end{figure}
+% \begin{figure}[H]
+%     \center{\includegraphics[scale = 0.7]{2.png}}
+% \end{figure}
 
 А так же из каждого значения акселерометра по каждой оси вычитается среднее по это оси.
 
-\begin{figure}[H]
-    \center{\includegraphics[scale = 0.85]{graph_1.png}}
-    \center{\includegraphics[scale = 0.85]{graph_2.png}}
-\end{figure}
+% \begin{figure}[H]
+%     \center{\includegraphics[scale = 0.85]{graph_1.png}}
+%     \center{\includegraphics[scale = 0.85]{graph_2.png}}
+% \end{figure}
 
 \subsubsection*{НАХОЖДЕНИЕ ПОЛОЖЕНИЯ ТЕЛЕФОНА БЕЗ УЧЕТА ДАННЫХ ИЗ ГИРОСКОПА}
 
 После того как данные нормализованы – как уже говорилось ранее – данные акселерометра дважды интегрируются. Если данные акселерометра по X – это вектор А, а время – это вектор T, то положение в каждый момент времени определяется, как $A[i] * (T[i] - T[i-1])$.
 
-\begin{figure}[H]
-    \center{\includegraphics[scale = 0.85]{3d_graph_1.png}}
-    \center{\includegraphics[scale = 0.85]{3d_graph_2.png}}
-\end{figure}
+% \begin{figure}[H]
+%     \center{\includegraphics[scale = 0.85]{3d_graph_1.png}}
+%     \center{\includegraphics[scale = 0.85]{3d_graph_2.png}}
+% \end{figure}
 
 \subsubsection*{ПОЧЕМУ И КАК ЭТО РАБОТАЕТ?}
 
@@ -88,6 +55,3 @@
     \end{pmatrix}
 \end{equation*}
 и получается угол поворота в следующий момент времени относительно земли. Зная эти углы, мы можем компенсировать движение телефона вокруг своих осей и находить более точное положение телефона в пространстве.
-
-
-\end{document}
