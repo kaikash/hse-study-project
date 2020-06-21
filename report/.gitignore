@@ -7,4 +7,5 @@
 **/*.toc
 **/*.xdv
 **/*.pdf
+**/*.syntex(busy)
 .DS_Store
