@@ -20,7 +20,7 @@
 \usepackage{float}
 \renewcommand{\ellipsisgap}{0.03em}
 \newcommand{\diff}{\mathrm{d}}
-
+\addto\captionsrussian{\def\refname{Cписок использованных источников}}
 \usepackage{graphicx}
 \graphicspath{ {./} }
 
@@ -65,7 +65,7 @@
         right=2cm,
         top=3cm,
         bottom=4cm
-]
+] 
 {geometry}
 
 
@@ -76,8 +76,9 @@
 \tableofcontents{}
 \newpage
 
-\input{parts/introduction}
 \input{parts/glossaries}
+\input{parts/introduction}
+\input{parts/data_take}
 \input{parts/farhat}
 \input{parts/vlad}
 \input{parts/sam}
@@ -85,6 +86,8 @@
 \input{parts/gleb}
 \input{parts/max}
 \input{parts/conclusion}
+\input{parts/sources}
+
 
 \end{document}
 
