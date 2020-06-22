@@ -1,0 +1,6 @@
+data/imgs/circles/*.jpg
+data/imgs/shakes/*.jpg
+data/imgs/squares/*.jpg
+data/imgs/triangles/*.jpg
+
+**/__pycache__
