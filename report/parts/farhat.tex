@@ -1,42 +1,49 @@
-\section{Создание механизма 
+
+\subsection{Создание механизма 
 сглаживания и фильтрации данных акселерометра и 
 гироскопа (Агаев Фархат)}
-
 Моей главной задачей являлось написть фильтр, 
 который сможет сгладить данные и избавиться от шума.
 Чтобы применить правильный фильтр нужно понять природу шума, 
 почему датчик акселерометра искажает данные.
-\begin{figure}[H]
-    \begin{center}
-        \begin{tabular}{cc}
-            \includegraphics[width=1\textwidth]{farim/relax} & 
-        \end{tabular}
-    \end{center}
-\end{figure}
-
-\subsection{Природа шума}
-Для начала нарисуем график по трем осям, 
-когда телефон лежит на столе, посмотрим есть какие-либо перепады
+\subsubsection{Природа шума}
+Для начала нарисуем график по трем осям (начнем с акселерометра), 
+когда телефон лежит на столе. Посмотрим есть какие-либо перепады
 
 \begin{figure}[H]
     \begin{center}
         \begin{tabular}{cc}
-            \includegraphics[width=1\textwidth]{farim/im2} & 
+            \includegraphics[width=0.75\textwidth]{farim/shakeee} & 
         \end{tabular}
     \end{center}
 \end{figure}
-Можно препдположить что, 
-ток течет по проводам и при этом, он создаёт вокруг себя магнитное поле 
-(чтобы избежать данный эффект, нужна хорошая изоляция),
-которое в свою очередь и портит наши данные.
-Но в телефоне датчик акселерометра - маленькая деталь, поэтому 
-невозожно сделать необходимую изоляцию данного прибора (в телефон просто не поместиться).
-Плюс ко всему акселерометр в 
-силу своего устройства - 
-достаточно неточный прибор и выдает большую погрешность.
+
+На графике хорошо видно, что есть высокочастотные сигналы, 
+когда телефон просто лежит на столе от -0.025  до 0.025 $\text{м}/\text{с}^2$. То есть
+погрешность уже состовляет более двух процентов. 
+
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{cc}
+            \includegraphics[width=0.5\textwidth]{farim/im2} & 
+            \includegraphics[width=0.5\textwidth]{farim/im3}
+        \end{tabular}
+    \end{center}
+    \caption{изображение датчика акселерометра и гироскопа.}
+\end{figure}
+Также на величину выходного сигнала акселерометра в основном влияют:
+\begin{enumerate}
+    \item температура окружающей среды и места крепления акселерометра (температурные погрешности);
+    \item внешние магнитные поля (погрешности от магнитного поля);
+    \item вибрация и угловые колебания основания (вибрационные погрешности);
+    \item частотные характеристики акселерометра (частотные погрешности);
+    \item гистерезис показаний (одна из составляющих нелинейности).
+\end{enumerate}
+
+
+
 \newpage
-Теперь взглянум на график данных одного из жестов (круг)
-Также посмотрим на другие жесты 
+Теперь взглянум на график разных жестов 
 \begin{figure}[H]
     \begin{center}
         \begin{tabular}{cc}
@@ -45,6 +52,7 @@
     \end{center}
 \end{figure}
 
+Хорошо видны всплески и  резкие искажения, их нужно будет сгладить
 
 \begin{figure}[H]
     \begin{center}
@@ -53,9 +61,13 @@
         \end{tabular}
     \end{center}
 \end{figure}
-Исходя из графиков, мы можем понять, 
-что в нашем случае идеально подойдет фильтр нижних частот, 
-он сможет сгадить данные и избавиться от шума
+
+Когда происходит встряска график получается более гладкий особенно по оси Z.
+Теперь рассмотрим жест круг, для больше точности и понимания
+Посмотрим графики несколько кругов, полученных при разной скорости их реализации.
+Круги будут идти с возрастающей скоростью.
+Также рассмотрим круги с разными радиусами, попробуем понять, насколько сильно будут портиться данные.
+
 \begin{figure}[H]
     \begin{center}
         \begin{tabular}{cc}
@@ -64,25 +76,72 @@
     \end{center}
 \end{figure}
 
+
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{cc}
+            \includegraphics[width=1\textwidth]{farim/im4.png} & 
+        \end{tabular}
+    \end{center}
+\end{figure}
+
+
 \newpage
-\subsection{Принцип работы}
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{cc}
+            \includegraphics[width=1\textwidth]{farim/im5.png} & 
+        \end{tabular}
+    \end{center}
+\end{figure}
+
+
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{cc}
+            \includegraphics[width=1\textwidth]{farim/im6.png} & 
+        \end{tabular}
+    \end{center}
+\end{figure}
+
+
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{cc}
+            \includegraphics[width=1\textwidth]{farim/im7.png} & 
+        \end{tabular}
+    \end{center}
+\end{figure}
+Как мы можем заметить главная проблема - высокие частоты и очень резкие переходы в этом случае.
+для нас идеально подойдет фильтр нижних частот.
+
+
+
+
+
+
+\newpage
+\subsubsection{Принцип работы}
 
 Это фильтр, который пропускает сигналы с 
 частотой ниже выбранной частоты среза и 
 ослабляет сигналы с частотами выше, чем частота
-среза. 
+среза.
+В нашем случае я подобрал частоту среза равную  0.6 Гц (Опытным путем построения графиков так, чтобы 
+не сильно уходить от данных полученных непосредственно от датчика и максимально хорошо сгладить данные)
+Фильтр реализован с помошью питоновских библиотек scipy, numpy (код есть на гитхабе) 
 Воспользуемся фильтром и посмотрим результат работы
 \begin{figure}[H]
     \begin{center}
         \begin{tabular}{cc}
-            \includegraphics[width=0.7\textwidth]{farim/squares} & 
+            \includegraphics[width=0.75\textwidth]{farim/squares} & 
         \end{tabular}
     \end{center}
 \end{figure}
 \begin{figure}[H]
     \begin{center}
         \begin{tabular}{cc}
-            \includegraphics[width=0.7\textwidth]{farim/sqxres} & 
+            \includegraphics[width=0.75\textwidth]{farim/sqxres} & 
         \end{tabular}
     \end{center}
 \end{figure}
@@ -127,3 +186,7 @@
         \end{tabular}
     \end{center}
 \end{figure}
+
+
+\textbf{Итоги работы:} На графика хорошо видно, 
+что фильтр справился со своей задачей. Мы получили более гладкий сигнал,
