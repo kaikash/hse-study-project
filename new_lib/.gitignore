@@ -2,3 +2,5 @@ data/imgs/circles/*
 data/imgs/shakes/*
 data/imgs/squares/*
 data/imgs/triangles/*
+
+**/__pycache__
