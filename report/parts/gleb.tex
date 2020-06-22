@@ -16,7 +16,7 @@
   \item 2dProjection -- 2-мерная проекция движения в плоскости
   \item 3dProjection -- 3-мерное движение в пространстве
   \item gestureData -- данные с акселерометра и гироскопа
-  \item image -- ссылка на картинку, на которой изображено 2-мерное движение
+  \item image -- ссылка на картинку, на которой изображено движение
 \end{itemize}
 
 У JavaScript библиотеки определены следующие методы:
@@ -36,7 +36,7 @@
 
 Вне зависимости от того, к какому обработчику приходит запрос, сервер всегда обрабатывает GestureData:
 \begin{itemize}
-  \item в первую очередь данные акселерометра фильтруются и сглаживаются, для этого был реализован метод GestrureData::normalize и GestureData::filter, \newline
+  \item В первую очередь данные акселерометра фильтруются и сглаживаются, для этого был реализован метод GestrureData::normalize и GestureData::filter. \newline
   \begin{figure}[H]
     \begin{center}
         \includegraphics[width=0.7\textwidth]{images/filter.png}
@@ -49,15 +49,15 @@
   \end{center}
   \caption{метод GestrureData::normalize}
 \end{figure}
-  \item после этого, показания акселерометра компенсируются, основываясь на данных гироскопа, для этого был реализован метод GestureData::normalize\_gyro,
+  \item После этого, показания акселерометра компенсируются, основываясь на данных гироскопа, для этого был реализован метод GestureData::normalize\_gyro.
   \begin{figure}[H]
     \begin{center}
         \includegraphics[width=0.7\textwidth]{images/norm_gyro.png}
     \end{center}
     \caption{метод GestrureData::normalize\_gyro}
   \end{figure}
-  \item затем, выделяются такты и ищется усредненное движение, для этого был реализован метод GestureData ::find\_average,
-  \item далее, полагая, что движение совершается в какой-то двумерной плоскости, находится наилучшая плоскость, внутри которой которой уже происходит поиск и классификация движения, для этого был реализован метод GestrureData::find\_pos, который находит движение и его проекции.
+  \item Затем, выделяются такты и ищется усредненное движение, для этого был реализован метод GestureData ::find\_average.
+  \item Далее, полагая, что движение совершается в какой-то двумерной плоскости, находится наилучшая плоскость, внутри которой которой уже происходит поиск и классификация движения, для этого был реализован метод GestrureData::find\_pos, который находит движение и его проекции.
   \begin{figure}[H]
     \begin{center}
         \includegraphics[width=0.7\textwidth]{images/find_pos.png}
@@ -68,7 +68,7 @@
 
 Так же были добавлены методы
 \begin{itemize}
-  \item GestureData::draw\_pos, который рисует графки движение в пространстве,
+  \item GestureData::draw\_pos, который рисует графки движение в пространстве.
   \begin{figure}[H]
     \begin{center}
         \begin{tabular}{ccc}
@@ -78,7 +78,7 @@
     \end{center}
     \caption{Пример графика распознанного движения}
 \end{figure}
-  \item GestureData::pos\_to\_image, который создает картинку движения (используется при обучении и для визуализации в мобильном приложении)
+  \item GestureData::pos\_to\_image, который создает картинку движения (используется при обучении и для визуализации в мобильном приложении).
   \begin{figure}[H]
     \begin{center}
         \includegraphics[width=0.4\textwidth]{images/pos_to_img_1.png}
@@ -101,8 +101,3 @@
 
   \item (POST) /predict (gesture: GestureData). При получении данного запроса происходит классификация движения на основе существующей модели и возвращается Gesture, в котором содержится класс, к которому относится данный жест, картинка с движением и данные о движение в плоскости и пространстве.
 \end{itemize}
-
-
-
-\subsubsection{Ссылка на библиотеку}
-https://github.com/kaikash/hse-study-project/new\_lib
