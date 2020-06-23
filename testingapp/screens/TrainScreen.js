@@ -20,8 +20,8 @@ export default function TrainScreen() {
     { label: "Triangle", value: "triangle" },
   ];
   const [selectedClass, setSelectedClass] = useState("circle");
-  const [gesture, setGesture] = useState([]);
-  const [result, setResult] = useState(false);
+  const [gesture, setGesture] = useState(null);
+  const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false)
 
   const submitGesture = async () => {
