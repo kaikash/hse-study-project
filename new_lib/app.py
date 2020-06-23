@@ -46,14 +46,10 @@ def fetch_gesture(data):
         raise ServerError('No gesture data provided', 400)
 
     gd = GestureData(data['gesture_data'])
-    if 'gnorm' in data:
-        gd.normalize_gyro()
-    if 'norm' in data:
-        gd.normalize()
-    if 'fil' in data:
-        gd.filter()
-    if 'avg' in data:
-        gd.find_average()
+    # gd.normalize_gyro()
+    gd.normalize()
+    gd.filter()
+    gd.find_average()
     return gd
 
 
