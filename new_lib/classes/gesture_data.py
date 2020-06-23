@@ -15,8 +15,7 @@ class GestureData:
     name = None
     data = None
 
-    def __init__(self, data, name=None):
-        self.name = name
+    def __init__(self, data):
         self.time = np.array(
             list(map(lambda x: x[0] / 1000, data)))
         self.accel = np.array(
@@ -131,6 +130,7 @@ class GestureData:
         self.gyro = self.gyro[:idx,]
         self.time = self.time[:idx,]
 
+
     def normalize(self, amount_of_avg=5):
         for _ in range(amount_of_avg):
             for i in range(self.accel.shape[0] - 1):
@@ -143,6 +143,7 @@ class GestureData:
             avg /= self.accel.shape[0]
             for i in range(self.accel.shape[0]):
                 self.accel[i] -= avg
+
 
     def normalize_gyro(self):
         start_gyro = self.gyro[0]
@@ -157,9 +158,11 @@ class GestureData:
             ])
             self.accel[i] = rotation_mtx.dot(self.accel[i])
 
+
     def filter(self):
         def proc(data):
             return scipy.signal.lfilter(numerator_coeffs, denominator_coeffs, data)
+
         order = 2
         cutoff_freq = 0.6
         sampling_freq = 10
@@ -169,6 +172,7 @@ class GestureData:
         numerator_coeffs, denominator_coeffs = scipy.signal.butter(order, normalized_cutoff_freq)
         self.accel = np.array([proc(self.accel[:, 0]), proc(self.accel[:, 1]), proc(self.accel[:, 2])]).T
 
+
     def find_pos(self, vel_comp=0.0125):
         res = []
         vel = np.array([0., 0., 0.])
@@ -177,14 +181,15 @@ class GestureData:
             dt = self.time[i] - self.time[i - 1]
             vel += ((self.accel[i] + self.accel[i-1]) / 2) * dt
             if i == 1:
-                vel = 0
-            pos += vel * dt - vel * 0.0125
+                continue
+            pos += vel * dt - vel * vel_comp
             res.append(np.array(pos))
         self.pos = np.array(res)
 
         self.pos_proj_3d = select_proj_3d(self.pos)
         self.pos_proj_2d = select_proj_2d(self.pos)
         return self.pos
+
 
     def draw_pos(self):
         if self.pos is None:
@@ -205,6 +210,7 @@ class GestureData:
                 margin=dict(r=20, l=10, b=10, t=10))
         fig.show()
 
+
     def pos_to_image(self, dir='data/imgs', filename='img'):
         if self.pos is None:
             self.find_pos()
@@ -218,3 +224,14 @@ class GestureData:
         plt.savefig(file_abs_path)
         plt.close(fig)
         return file_abs_path
+
+
+    def to_dict(self):
+        return {
+            'pos': self.pos.tolist(),
+            'projection_3d': self.pos_proj_3d.tolist(),
+            'projection_2d': self.pos_proj_2d.tolist(),
+            'time': self.time.tolist(),
+            'accel': self.accel.tolist(),
+            'gyro': self.gyro.tolist()
+        }

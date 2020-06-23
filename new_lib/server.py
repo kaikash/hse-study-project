@@ -29,7 +29,7 @@ class Server:
     def __init__(self, name, host='0.0.0.0', port=3000):
         self.port = port
         self.host = host
-        self.app = Flask(name)
+        self.app = Flask(name, static_folder='data', static_url_path='/data')
 
     def run(self):
         self.app.run(host=self.host, port=self.port)
