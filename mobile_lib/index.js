@@ -35,33 +35,90 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 exports.__esModule = true;
-exports.predict = exports.train = exports.Gesture = exports.GestureData = void 0;
+exports.retrain = exports.predict = exports.train = exports.API_URL = exports.Gesture = exports.GestureData = void 0;
+var axios_1 = require("axios");
 var GestureData = /** @class */ (function () {
-    function GestureData() {
+    function GestureData(data) {
+        this.data = data;
     }
+    GestureData.prototype.toArray = function () {
+        return __spreadArrays(this.data);
+    };
     return GestureData;
 }());
 exports.GestureData = GestureData;
 var Gesture = /** @class */ (function () {
-    function Gesture() {
+    function Gesture(name, image, gestureData, projection2d, projection3d, prediction) {
+        this.name = name;
+        this.image = image;
+        this.gestureData = gestureData;
+        this.projection2d = projection2d;
+        this.projection3d = projection3d;
+        this.prediction = prediction;
     }
     return Gesture;
 }());
 exports.Gesture = Gesture;
-function train(name, gesture) {
+exports.API_URL = '';
+function train(name, gesture, apiUrl) {
+    if (apiUrl === void 0) { apiUrl = exports.API_URL; }
     return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            return [2 /*return*/];
+        var res, _a, image, gesture_data, projection_2d, projection_3d, gestureData;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, axios_1["default"].post(apiUrl + "/train", {
+                        gesture_data: gesture.toArray()
+                    })];
+                case 1:
+                    res = _b.sent();
+                    _a = res.data.gesture, image = _a.image, gesture_data = _a.gesture_data, projection_2d = _a.projection_2d, projection_3d = _a.projection_3d;
+                    gestureData = new GestureData(gesture_data);
+                    return [2 /*return*/, new Gesture(name, image, gestureData, projection_2d, projection_3d)];
+            }
         });
     });
 }
 exports.train = train;
-function predict(gesture) {
+function predict(gesture, apiUrl) {
+    if (apiUrl === void 0) { apiUrl = exports.API_URL; }
     return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            return [2 /*return*/, new Gesture()];
+        var res, _a, name, image, gesture_data, projection_2d, projection_3d, gestureData, prediction;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, axios_1["default"].post(apiUrl + "/train", {
+                        gesture_data: gesture.toArray()
+                    })];
+                case 1:
+                    res = _b.sent();
+                    _a = res.data.gesture, name = _a.name, image = _a.image, gesture_data = _a.gesture_data, projection_2d = _a.projection_2d, projection_3d = _a.projection_3d;
+                    gestureData = new GestureData(gesture_data);
+                    prediction = res.data.prediction;
+                    return [2 /*return*/, new Gesture(name, image, gestureData, projection_2d, projection_3d, prediction)];
+            }
         });
     });
 }
 exports.predict = predict;
+function retrain(apiUrl) {
+    if (apiUrl === void 0) { apiUrl = exports.API_URL; }
+    return __awaiter(this, void 0, void 0, function () {
+        var res;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, axios_1["default"].post(apiUrl + "/retrain")];
+                case 1:
+                    res = _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.retrain = retrain;
