@@ -95,7 +95,7 @@ def predict(request):
     prediction = classifier.predict(image_path)
     idx = np.unravel_index(
         np.argmax(prediction, axis=None), prediction.shape)
-    gesture = Gesture(gd, Classifier.classes[idx[1]], image_path)
+    gesture = Gesture(gd, image_path, Classifier.classes[idx[1]])
 
     return {
         'success': True,
