@@ -43,7 +43,7 @@ export default function Motion(props) {
       }}
       onPressOut={() => {
         setRecording(false);
-        props.onGesture(gesture);
+        props.onGesture([...gesture]);
       }}
     >
       <Text

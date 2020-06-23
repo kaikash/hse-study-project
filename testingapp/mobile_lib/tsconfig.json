@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2015"],
+    "types" : [],
+    "declaration": true
+  },
+  "include": ["index.ts"],
+  "exclude": [
+      "node_modules",
+      "../node_modules",
+      "**/*.spec.ts"
+  ]
+}
