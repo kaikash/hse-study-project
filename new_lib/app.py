@@ -42,6 +42,9 @@ classifier = Classifier()
 server = Server(__name__, port=3000)
 
 def fetch_gesture(data):
+    if 'gesture_data' not in data:
+        raise ServerError('No gesture data provided', 400)
+
     gd = GestureData(data['gesture_data'])
     if 'gnorm' in data:
         gd.normalize_gyro()
@@ -57,6 +60,9 @@ def fetch_gesture(data):
 def train(request):
     data = request.get_json()
     gd = fetch_gesture(data)
+
+    if 'name' not in data:
+        raise ServerError('No class provided', 400)
 
     if data['name'] not in Classifier.classes:
         raise ServerError('Invalid class', 400)
