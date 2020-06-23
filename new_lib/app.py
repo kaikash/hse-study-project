@@ -47,39 +47,18 @@ def fetch_gesture(data):
 
     print('step', 1)
     gd = GestureData(data['gesture_data'])
-    print('step', 2)
     # gd.normalize_gyro()
     gd.normalize()
-    print('step', 3)
     gd.filter()
-    print('step', 4)
     gd.find_average()
-    print('step', 5)
-    # if 'gnorm' in data:
-    # if 'norm' in data:
-    # if 'fil' in data:
-    # if 'avg' in data:
     return gd
 
 
 def train(request):
     data = request.get_json()
-    print('alala1')
     gd = fetch_gesture(data)
-
-    # if 'name' not in data:
-    #     raise ServerError('No class provided', 400)
-
-    # if data['name'] not in Classifier.classes:
-    #     raise ServerError('Invalid class', 400)
-
-    print('alala')
-
     image_path = gd.pos_to_image(dir='data/imgs/'+data['name'], filename='img_'+random_str())
-    print('blabla1')
     gesture = Gesture(gd, image_path)
-
-    print('blabla2')
 
     return {
         'success': True,
