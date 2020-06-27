@@ -1,20 +1,38 @@
-from xmlrpc.server import SimpleXMLRPCServer
-from xmlrpc.server import SimpleXMLRPCRequestHandler
+from flask import Flask, Response, request
 
-from gesture import Gesture
 
-# Restrict to a particular path.
-class RequestHandler(SimpleXMLRPCRequestHandler):
-    rpc_paths = ('/RPC2','/')
+class ServerError(Exception):
+    def __init__(self, code, msg):
+        self.code = code
+        self.msg = msg
 
-# Create server
-server = SimpleXMLRPCServer(("localhost", 9090),
-                            requestHandler=RequestHandler)
-server.register_introspection_functions()
+    def to_json(self):
+        return {
+            'message': self.msg,
+            'code': self.code
+        }
 
-def predict(filename):
-    gesture = Gesture.from_abs_file(filename)[0]
-    return gesture.predict()
 
-server.register_function(predict, 'predict')
-server.serve_forever()
+class EndpointAction:
+    def __init__(self, action):
+        self.action = action
+        self.response = None
+
+    def __call__(self, *args):
+        try:
+            return self.action(request)
+        except ServerError as err:
+            return err.to_json(), err.code
+
+
+class Server:
+    def __init__(self, name, host='0.0.0.0', port=3000):
+        self.port = port
+        self.host = host
+        self.app = Flask(name, static_folder='data', static_url_path='/data')
+
+    def run(self):
+        self.app.run(host=self.host, port=self.port)
+
+    def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None, methods=None):
+        self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler), methods=methods)

@@ -14,4 +14,3 @@ class Gesture:
             'image': self.image_path,
             'gesture_data': self.gesture_data.to_dict()
         }
-
