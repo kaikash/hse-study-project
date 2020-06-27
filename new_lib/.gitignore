@@ -1,8 +1,0 @@
-data/imgs/circle/*.jpg
-data/imgs/shake/*.jpg
-data/imgs/square/*.jpg
-data/imgs/triangle/*.jpg
-data/tmp/*.jpg
-data/model.h5
-
-**/__pycache__
