@@ -2,28 +2,45 @@ import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import * as WebBrowser from "expo-web-browser";
 import * as React from "react";
-import { Image, StyleSheet, Text, View, Picker, Button } from "react-native";
+import { Image, StyleSheet, Text, View, Picker, Button, ActivityIndicator } from "react-native";
 import { RectButton, ScrollView } from "react-native-gesture-handler";
 import Motion from "../components/Motion";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
+import { train, predict, retrain, GestureData } from '../mobile_lib/index.js'
+import { apiUrl } from '../config';
 
 import exampleImage from '../assets/images/12.jpg'
 
 export default function TrainScreen() {
-  const [classes, setClasses] = useState([
+  const classes = [
     { label: "Shake", value: "shake" },
     { label: "Circle", value: "circle" },
     { label: "Square", value: "square" },
-  ]);
+    { label: "Triangle", value: "triangle" },
+  ];
   const [selectedClass, setSelectedClass] = useState("circle");
-  const [gesture, setGesture] = useState([]);
-  const [result, setResult] = useState(false);
+  const [gesture, setGesture] = useState(null);
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false)
 
-  const submitGesture = () => {
-    // alert(selectedClass + "\n" + JSON.stringify(gesture));
-    setResult(true)
-  };
+  const submitGesture = async () => {
+    setLoading(true)
+    try {
+      let gestureData = new GestureData(gesture)
+      let res = await train(selectedClass, gestureData, apiUrl)
+      setResult(res)
+      setLoading(false)
+    } catch (err) {
+      console.warn(err)
+      setLoading(false)
+    }
+  }
+  if (loading) return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <ActivityIndicator size="large" color="black" />
+    </View>
+  );
   return (
     <View style={{ alignItems: "center", flex: 1 }}>
       <Text style={{ padding: 20, fontWeight: "bold", fontSize: 20 }}>
@@ -32,12 +49,14 @@ export default function TrainScreen() {
       <View style={{ width: "100%" }}>
         <Picker
           selectedValue={selectedClass}
+          disabled={!!result}
           onValueChange={(itemValue, itemIndex) => {
             let value = itemValue;
             // if (itemValue == "_add_new") {
             //   let value = prompt("Enter class name:");
             //   setClasses([...classes, { label: value, value }]);
             // }
+            // console.warn(value)
             setSelectedClass(value);
           }}
         >
@@ -55,7 +74,9 @@ export default function TrainScreen() {
         { result && <View style={{ alignItems: "center" }}>
           <Image
             style={{ width: 200, height: 200, marginBottom: 20 }}
-            source={exampleImage}
+            source={{
+              uri: result.image
+            }}
           />
         </View> }
       </View>
@@ -88,6 +109,21 @@ export default function TrainScreen() {
             }}
           />
         </View>
+      </View>
+      <View style={{
+          flexDirection: "row",
+          paddingBottom: 20
+        }}>
+        <Button title="Retrain model" color="orange" onPress={async () => {
+          setLoading(true)
+          try {
+            await retrain(apiUrl)
+            setLoading(false)
+          } catch (err) {
+            console.warn(err)
+            setLoading(false)
+          }
+        }} />
       </View>
     </View>
   );
